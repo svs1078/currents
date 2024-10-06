@@ -17,8 +17,9 @@ fn main() {
     let duration: f64 = 1.0;
     let file_id = "currents.txt";
     
+    let home_dir = std::env::home_dir().unwrap().display();
     let mut ratios = vec![];
-    let path = format!("{}/{}", std::env::home_dir().unwrap().display(), file_id);
+    let path = format!("{}/{}", home_dir, file_id);
     let mut file: File = File::create(path).unwrap();
 
     let st6 = 10f64.powf(6.0);
