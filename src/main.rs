@@ -32,7 +32,7 @@ fn main() {
     let cont = format!("\t\t\t\tМатериал жилы или экрана кабеля\nS, mm^2\t{:-<86}", "");
     let elem = format!("\t\tCu\t\t\tAl\t\t\tLead\t\t\tSteel\n{:-<94}", "");
 
-    println!("{top}"); writeln!(file, "{top}").unwrap();
+    println!("{top}"); writeln!(file, "{top}").unwrap(); //печать и вывод в файл
     println!("{cont}"); writeln!(file, "{cont}").unwrap();
     println!("{elem}"); writeln!(file, "{elem}").unwrap();
     
