@@ -17,13 +17,13 @@ fn main() {
     let duration: f64 = 1.0;
     let file_id = "currents.txt";
     
-    let home_dir = std::env::home_dir().unwrap().display();
-    let mut ratios = vec![];
-    let path = format!("{}/{}", home_dir, file_id);
+    let home_dir = std::env::home_dir().unwrap();
+    let mut ratios = vec![]; //создаем пустой вектор для значений коэф-та К
+    let path = format!("{}/{}", home_dir.display(), file_id);
     let mut file: File = File::create(path).unwrap();
 
-    let st6 = 10f64.powf(6.0);
-    let st9 = 10f64.powf(-9.0);
+    let st6 = 10f64.powf(6.0); //возведение в 6 степень
+    let st9 = 10f64.powf(-9.0); //возведение в -9 степень
 
     let top = format!(
         "\n\nДопустимые токи КЗ, кА (t = {} сек)\t\t\t\t\tT0 = {}\u{00B0}C, T1 = {}\u{00B0}C\n{:-<94}",
@@ -35,7 +35,6 @@ fn main() {
     println!("{top}"); writeln!(file, "{top}").unwrap(); //печать и вывод в файл
     println!("{cont}"); writeln!(file, "{cont}").unwrap();
     println!("{elem}"); writeln!(file, "{elem}").unwrap();
-    
  
     CROSS_SECTION.map(| s | {
 
@@ -43,16 +42,16 @@ fn main() {
         write!(file, "{s}\t\t").unwrap();
 
         MATERIALS.map(| m | {
-
+            //расчет коэффциента для данного материала m
             let ratio = (m[1] * st6 * (m[0] + 20.0) * 10f64.powf(-12.0) /
                 (m[2] * st9) * ((t2 + m[0]) / (t1 + m[0])).ln()).powf(0.5);
-        
+            //расчет допустимого тока КЗ 
             let current = s * ratio * duration.powf(-0.5) * 10f64.powf(-3.0); 
-
+            //для сечения жилы кабеля 800 кв.мм снижаем точность до 2 знаков
             if s == 800.0 {
                 print!("{:.2}\t\t\t", current);
                 write!(file, "{:.2}\t\t\t", current).unwrap();
-                ratios.push(ratio);
+                ratios.push(ratio); //пушим в вектор значениия К
             } else {
                 print!("{:.3}\t\t\t", current);
                 write!(file, "{:.3}\t\t\t", current).unwrap();
@@ -63,7 +62,7 @@ fn main() {
     });
     print!("{:-<94}\nk, кА/мм^2", "");
     write!(file, "{:-<94}\nk, кА/мм^2", "").unwrap();
-
+    //вывод на печать значения К
     for i in ratios.iter() {
         print!("\t{:.4}\t\t", i * 10f64.powf(-3.0));
         write!(file, "\t{:.4}\t\t", i * 10f64.powf(-3.0)).unwrap();
